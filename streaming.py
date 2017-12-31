@@ -5,7 +5,7 @@ from pyspark.streaming import StreamingContext
 
 if __name__ == "__main__":
 
-	sc = SparkContext(appName="StreamingErrorCount")
+	sc = SparkContext(appName="streaming")
 	ssc = StreamingContext(sc, 10)
 
 	ssc.checkpoint("file:///temp/spark")
