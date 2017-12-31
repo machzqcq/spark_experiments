@@ -11,11 +11,12 @@ if __name__ == "__main__":
     ssc.checkpoint("file:///temp/spark")
 
     lines = ssc.socketTextStream(sys.argv[1], int(sys.argv[2]))
+    counts = lines.flatMap(lambda line: line.split(" "))\
+                  .filter(lambda word: "ERROR" in word)\
+                  .map(lambda word: (word, 1))\
+                  .reduceByKeyAndWindow(lambda a, b: a + b, lambda a, b: a - b, 20, 2)
 
-    sum = lines.reduceByWindow(
-        lambda x, y: int(x) + int(y),
-        lambda x, y: int(x) - int(y),
-        10,2)
-    sum.pprint()
+
+    counts.pprint()
     ssc.start()
     ssc.awaitTermination()
